@@ -1,43 +1,66 @@
 import { useState, useEffect } from 'react';
 import { Layout, Input, ButtonRounded } from '../components';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
 
 //simulación de censores (true = disponible, false = ocupado)
 
-const parkingData = [
+const parkingDataA = [
     [false, true, true, false, true, false],   // Fila 1
     [true, true, false, false, true, true],    // Fila 2
     [false, false, true, true, false, false],  // Fila 3
 ];
+const parkingDataB = [
+    [true, false, true, true, false, true],    // Fila 1
+    [false, true, true, false, true, false],   // Fila 2
+    [true, true, false, true, false, true],    // Fila 3
+];
 
-export default function ViewNewScreen() {
-    const [mapa, setMapa] = useState('');
+export default function LoginScreen() {
+    const [mapaCompleto, setMapaCompleto] = useState([]);
+
 
     useEffect(() => {
         // Aquí podrías hacer fetch a sensores reales
-        setMapa(parkingData);
+        setMapaCompleto([...parkingDataA, ...parkingDataB]);
     }, []);
 
     return (
         <Layout>
             <ScrollView contentContainerStyle={styles.container}>
-                <Text style={styles.title}>Estacionamiento</Text>
-                <Text style={styles.section}>Sección A</Text>
+                <Text style={styles.title}>Estacionamiento Disponible</Text>
 
+                {/*Mapa completo sección A y B*/}
+                {/*<Text style={styles.section}>Sección A</Text> {renderGrid(mapaA)}*/}
 
+                <Text style={styles.entradaSalida}>Entrada / Salida</Text>
                 <View style={styles.grid}>
-                    {mapa.map((fila, filaIndex) => (
-                        <View key={filaIndex} style={styles.row}>
-                            {fila.map((espacio, espacioIndex) => (
-                                <View
-                                    key={espacioIndex}
-                                    style={[
-                                        styles.slot,
-                                        { backgroundColor: espacio ? '#4CAF50' : '#F44336' }, // verde o rojo
-                                    ]}
-                                />
-                            ))}
-                        </View>
-                    ))}
+                    {mapaCompleto.map((fila, filaIndex) => {
+                        // Mostrar título de Sección B antes de la primera fila de B
+                        const showSectionTitle = filaIndex === parkingDataA.length;
+                        return (
+                            <View key={filaIndex} style={{ marginBottom: 10 }}>
+                                {filaIndex === 0 && <Text style={styles.section}>Sección A</Text>}
+                                {showSectionTitle && <Text style={styles.section}>Sección B</Text>}
+                                <View style={styles.row}>
+                                    {fila.map((espacio, espacioIndex) => (
+                                        <View
+                                            key={espacioIndex}
+                                            style={[
+                                                styles.slot,
+                                                {
+                                                    backgroundColor: espacio
+                                                        ? filaIndex < parkingDataA.length
+                                                            ? '#4CAF50'   // Sección A
+                                                            : '#4CAF50'   // Sección B
+                                                        : '#F44336',       // Ocupado
+                                                },
+                                            ]}
+                                        />
+                                    ))}
+                                </View>
+                            </View>
+                        );
+                    })}
                 </View>
 
                 {/* Leyenda */}
