@@ -11,7 +11,7 @@ export default function RegisterScreen({navigation}) {
 
     function Confirmar(){
         //logica
-        navigation.navigate('New');
+        navigation.navigate('Home',{ screen:'Login'});
     }
 
     return (
