@@ -6,7 +6,8 @@ import { centros } from "../services/centrosData";
 export default function MallSelection({ navigation }) {
   const handlePress = (centro) => {
     console.log("Centro seleccionado:", centro.nombre);
-    // navigation.navigate("DetalleCentro", { id: centro.id });
+    navigation.navigate("Directory", { id: centro.id });
+    // navigation.navigate("Parking Map", { id: centro.id });
   };
 
   return (

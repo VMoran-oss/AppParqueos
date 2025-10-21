@@ -13,6 +13,7 @@ import ParkingMapScreen from './screens/ParkingMapScreen';
 // importar react navigation
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import DirectoryScreen from './screens/DirectoryScreen';
 
 // crear Stack
 const Stack = createStackNavigator();
@@ -23,19 +24,31 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={AppTabs} options={{ headerShown: false }} />
-        {/* <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Ingresar" }} />
-        <Stack.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Ver Parqueos" }} /> */}
+         {/*<Stack.Screen name="Login" component={LoginScreen} options={{ title: "Ingresar" }} />
+        <Stack.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Ver Parqueos" }} />*/}
         {/*<Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Registrarse" }} />*/}
-       {/*} <Stack.Screen 
+        <Stack.Screen 
           name="MallSelection" 
           component={MallSelectionScreen} 
+
           options={{ title: "Seleccionar Centro Comercial" }}
-        />*/}
+        />*/
+
+          options={{title: "Seleccionar centro comercial"}}
+         /
+
 
         <Stack.Screen
           name="SignUp"
           component={SignUpScreen}
           options={{ title: "Registro"}}
+        />
+
+
+         <Stack.Screen
+          name="Directory"
+          component={DirectoryScreen}
+          options={{ title: "Directorio"}}
         />
 
       </Stack.Navigator>

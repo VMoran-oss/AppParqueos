@@ -3,7 +3,11 @@ import { Ionicons } from '@expo/vector-icons';
 
 // importar screens de los tabs
 import LoginScreen from '../screens/LoginScreen';
+{/*import SignUpScreen from '../screens/SignUpScreen';*/}
+import MallSelectionScreen from '../screens/MallSelectionScreen';
+{/*import DirectoryScreen from '../screens/DirectoryScreen';*/}
 import ParkingMapScreen from '../screens/ParkingMapScreen';
+
 
 // crear tabs
 const Tab = createBottomTabNavigator();
@@ -33,6 +37,9 @@ export default function AppTabs() {
             })}
         >
             <Tab.Screen name="Login" component={LoginScreen} options={{ title: "Iniciar sesión" }} />
+            {/*<Tab.Screen name="Sign Up" component={SignUpScreen} options={{ title: "Registrarse" }} />*/}
+            <Tab.Screen name="Mall Selection" component={MallSelectionScreen} options={{ title: "Seleccionar Centro Comercial " }} />
+            {/*<Tab.Screen name="Directory" component={DirectoryScreen} options={{ title: "Directorio" }} />*/}
             <Tab.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Mapa de parqueo" }} />
         </Tab.Navigator>
     );
