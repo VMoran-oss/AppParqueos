@@ -1,4 +1,9 @@
 import React from 'react'; 
+<<<<<<< HEAD
+=======
+import MallSelectionScreen from './screens/MallSelectionScreen';
+import SignUpScreen from './screens/SignUpScreen';
+>>>>>>> 6c41caa0cdad9446a34f53a474433b09cf62ba8b
 // importar tabs
 import AppTabs from './navigation/AppTabs';
 
@@ -26,8 +31,20 @@ export default function App() {
        {/*} <Stack.Screen 
           name="MallSelection" 
           component={MallSelectionScreen} 
+<<<<<<< HEAD
           options={{ title: "Seleccionar Centro Comercial" }}
         />*/}
+=======
+          options={{ title: "Seleccionar Centro Comercial" }} 
+        />
+
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={{ title: "Registro"}}
+        />
+
+>>>>>>> 6c41caa0cdad9446a34f53a474433b09cf62ba8b
       </Stack.Navigator>
     </NavigationContainer>
   );

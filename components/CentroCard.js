@@ -1,6 +1,6 @@
 import React from "react";
 import { TouchableOpacity, Image, Text, StyleSheet, View } from "react-native";
-import CentroCard from "./components/CentroCard";
+
 
 export default function CentroCard({ imagen, nombre, descripcion, onPress }) {
   return (
