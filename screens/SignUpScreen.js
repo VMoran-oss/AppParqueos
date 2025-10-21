@@ -1,47 +1,75 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
 import { Layout, Input, ButtonRounded } from '../components';
 
-export default function RegisterScreen(){
+export default function RegisterScreen({navigation}) {
     const [nombre, setNombre] = useState('');
     const [genero, setGenero] = useState('');
     const [email, setEmail] = useState('');
     const [clave, setClave] = useState('');
     const [confirmarClave, setConfirmarClave] = useState('');
 
+    function Confirmar(){
+        //logica
+        navigation.navigate('New');
+    }
+
     return (
-        <Layout>
-            <Input 
-                label="Nombre"
-                placeholder="Juan Perez"
-                type="default"
-                value={nombre}
-                onChangeText={setNombre} />
-            <Input npm install
-                label="Genero"
-                placeholder="Femenino/Masculino"
-                type="default"
-                value={genero}
-                onChangeText={setGenero} />                  
-            <Input 
-                label="Correo electronico"
-                placeholder="codigo@esfe.agape.edu.sv"
-                type="email-address"
-                value={email}
-                onChangeText={setEmail} />
-            <Input 
-                label="Constraseña"
-                placeholder="*****"
-                hideText={true}
-                value={clave}
-                onChangeText={setClave} />
-            <Input 
-                label="Confirmar constraseña"
-                placeholder="*****"
-                hideText={true}
-                value={confirmarClave}
-                onChangeText={setConfirmarClave} />
-            <ButtonRounded title="Confirmar" />    
-            <ButtonRounded title="Iniciar sesion" isPrimary={false} />    
+        <Layout title="Registro">
+            <View style={styles.form}>
+                <Input 
+                    label="Nombre"
+                    placeholder="Juan Perez"
+                    type="default"
+                    value={nombre}
+                    onChangeText={setNombre}
+                />
+                <Input 
+                    label="Género"
+                    placeholder="Femenino / Masculino"
+                    type="default"
+                    value={genero}
+                    onChangeText={setGenero}
+                />                  
+                <Input 
+                    label="Correo electrónico"
+                    placeholder="codigo@esfe.agape.edu.sv"
+                    type="email-address"
+                    value={email}
+                    onChangeText={setEmail}
+                />
+                <Input 
+                    label="Contraseña"
+                    placeholder="*****"
+                    hideText={true}
+                    value={clave}
+                    onChangeText={setClave}
+                />
+                <Input 
+                    label="Confirmar contraseña"
+                    placeholder="*****"
+                    hideText={true}
+                    value={confirmarClave}
+                    onChangeText={setConfirmarClave}
+                />
+
+                <View style={styles.buttonContainer}>
+                    <ButtonRounded title="Confirmar"onPress={Confirmar} />
+                </View>
+            </View>
         </Layout>
     );
 }
+
+const styles = StyleSheet.create({
+    form: {
+        flex: 1,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        gap: 12,
+    },
+    buttonContainer: {
+        marginTop: 25,
+        alignItems: 'center',
+    },
+});
