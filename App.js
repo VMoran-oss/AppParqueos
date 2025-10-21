@@ -24,12 +24,13 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={AppTabs} options={{ headerShown: false }} />
-        {/* <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Ingresar" }} />
-        <Stack.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Ver Parqueos" }} /> */}
+         {/*<Stack.Screen name="Login" component={LoginScreen} options={{ title: "Ingresar" }} />
+        <Stack.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Ver Parqueos" }} />*/}
         {/*<Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Registrarse" }} />*/}
         <Stack.Screen 
           name="MallSelection" 
           component={MallSelectionScreen} 
+          options={{title: "Seleccionar centro comercial"}}
          />
 
         <Stack.Screen
