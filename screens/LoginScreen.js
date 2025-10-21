@@ -1,9 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Layout, Input, ButtonRounded } from '../components';
 
-export default function LoginScreen(){
+export default function LoginScreen({ navigation }){
     const [email, setEmail] = useState('');
     const [clave, setClave] = useState('');
+
+    function entrar(){
+    // logica 
+    navigation.navigate('Parking Map'); // ir a screen Mapa de parqueo
+    }
 
     return (
         <Layout>
@@ -19,8 +24,9 @@ export default function LoginScreen(){
                 hideText={true}
                 value={clave}
                 onChangeText={setClave} />
-            <ButtonRounded title="Iniciar Sesion" />    
-            <ButtonRounded title="Registrarse" isPrimary={false} />    
+            <ButtonRounded title="Iniciar Sesion" onPress={iniciarSesion} />    
+            <ButtonRounded title="Registrarse" isPrimary={false} 
+                onPress={() => navigation.navigate('Register')} />    
         </Layout>
     );
 }

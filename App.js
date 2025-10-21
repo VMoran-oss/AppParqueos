@@ -1,11 +1,13 @@
 import React from 'react'; 
 import MallSelectionScreen from './screens/MallSelectionScreen';
 import SignUpScreen from './screens/SignUpScreen';
+
 // importar tabs
 import AppTabs from './navigation/AppTabs';
 
 // importar screens que no se usan en los tabs
 import LoginScreen from './screens/LoginScreen';
+{/*import MallSelectionScreen from './screens/MallSelectionScreen';*/}
 import ParkingMapScreen from './screens/ParkingMapScreen';
 
 // importar react navigation
@@ -23,12 +25,12 @@ export default function App() {
         <Stack.Screen name="Home" component={AppTabs} options={{ headerShown: false }} />
         {/* <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Ingresar" }} />
         <Stack.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Ver Parqueos" }} /> */}
-
-        <Stack.Screen 
+        {/*<Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Registrarse" }} />*/}
+       {/*} <Stack.Screen 
           name="MallSelection" 
           component={MallSelectionScreen} 
-          options={{ title: "Seleccionar Centro Comercial" }} 
-        />
+          options={{ title: "Seleccionar Centro Comercial" }}
+        />*/}
 
         <Stack.Screen
           name="SignUp"
