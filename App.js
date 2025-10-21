@@ -1,9 +1,7 @@
 import React from 'react'; 
-<<<<<<< HEAD
-=======
 import MallSelectionScreen from './screens/MallSelectionScreen';
 import SignUpScreen from './screens/SignUpScreen';
->>>>>>> 6c41caa0cdad9446a34f53a474433b09cf62ba8b
+
 // importar tabs
 import AppTabs from './navigation/AppTabs';
 
@@ -15,6 +13,7 @@ import ParkingMapScreen from './screens/ParkingMapScreen';
 // importar react navigation
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import DirectoryScreen from './screens/DirectoryScreen';
 
 // crear Stack
 const Stack = createStackNavigator();
@@ -28,15 +27,10 @@ export default function App() {
         {/* <Stack.Screen name="Login" component={LoginScreen} options={{ title: "Ingresar" }} />
         <Stack.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Ver Parqueos" }} /> */}
         {/*<Stack.Screen name="Register" component={RegisterScreen} options={{ title: "Registrarse" }} />*/}
-       {/*} <Stack.Screen 
+        <Stack.Screen 
           name="MallSelection" 
           component={MallSelectionScreen} 
-<<<<<<< HEAD
-          options={{ title: "Seleccionar Centro Comercial" }}
-        />*/}
-=======
-          options={{ title: "Seleccionar Centro Comercial" }} 
-        />
+         />
 
         <Stack.Screen
           name="SignUp"
@@ -44,7 +38,12 @@ export default function App() {
           options={{ title: "Registro"}}
         />
 
->>>>>>> 6c41caa0cdad9446a34f53a474433b09cf62ba8b
+         <Stack.Screen
+          name="Directory"
+          component={DirectoryScreen}
+          options={{ title: "Directorio"}}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

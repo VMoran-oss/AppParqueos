@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Layout, Input, ButtonRounded } from '../components';
+import MallSelection from './MallSelectionScreen';
 
 export default function LoginScreen({ navigation }){
     const [email, setEmail] = useState('');
     const [clave, setClave] = useState('');
 
-    function entrar(){
+    function iniciarSesion(){
     // logica 
-    navigation.navigate('Parking Map'); // ir a screen Mapa de parqueo
-    }
+    navigation.navigate('SignUp'); // ir a screen registrarse
+    navigation.navigate('MallSelection'); // ir a screen registrarse
+}
 
     return (
         <Layout>
@@ -24,9 +26,9 @@ export default function LoginScreen({ navigation }){
                 hideText={true}
                 value={clave}
                 onChangeText={setClave} />
-            <ButtonRounded title="Iniciar Sesion" onPress={iniciarSesion} />    
-            <ButtonRounded title="Registrarse" isPrimary={false} 
-                onPress={() => navigation.navigate('Register')} />    
+            <ButtonRounded title="Iniciar Sesion" onPress={() => navigation.navigate('MallSelection' ) }/>
+            <ButtonRounded title="Registrarse" isPrimary={false}    
+             onPress={() => navigation.navigate('SignUp')}/>
         </Layout>
     );
 }
