@@ -1,51 +1,59 @@
 import { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Layout, Input, ButtonRounded } from '../components';
+import { FlatList, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
+import { obtenerNoticias, formatDate } from '../services/newService';
 
-export default function RegisterScreen({navigation}) {
+
+export default function RegisterScreen({ navigation }) {
     const [nombre, setNombre] = useState('');
     const [genero, setGenero] = useState('');
     const [email, setEmail] = useState('');
     const [clave, setClave] = useState('');
     const [confirmarClave, setConfirmarClave] = useState('');
 
-    function Confirmar(){
+    function Confirmar() {
         //logica
-        navigation.navigate('Home',{ screen:'Login'});
+        navigation.navigate('Home', { screen: 'Login' });
     }
 
     return (
         <Layout title="Registro">
+            <FlatList
+                data={datos}
+                renderItem={renderItem}
+                keyExtractor={(x) => x.id}
+            />
             <View style={styles.form}>
-                <Input 
+                <Input
                     label="Nombre"
                     placeholder="Juan Perez"
                     type="default"
                     value={nombre}
                     onChangeText={setNombre}
                 />
-                <Input 
+                <Input
                     label="Género"
                     placeholder="Femenino / Masculino"
                     type="default"
                     value={genero}
                     onChangeText={setGenero}
-                />                  
-                <Input 
+                />
+                <Input
                     label="Correo electrónico"
                     placeholder="codigo@esfe.agape.edu.sv"
                     type="email-address"
                     value={email}
                     onChangeText={setEmail}
                 />
-                <Input 
+                <Input
                     label="Contraseña"
                     placeholder="*****"
                     hideText={true}
                     value={clave}
                     onChangeText={setClave}
                 />
-                <Input 
+                <Input
                     label="Confirmar contraseña"
                     placeholder="*****"
                     hideText={true}
@@ -54,7 +62,7 @@ export default function RegisterScreen({navigation}) {
                 />
 
                 <View style={styles.buttonContainer}>
-                    <ButtonRounded title="Confirmar"onPress={Confirmar} />
+                    <ButtonRounded title="Confirmar" onPress={Confirmar} />
                 </View>
             </View>
         </Layout>
