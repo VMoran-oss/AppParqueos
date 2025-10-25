@@ -1,5 +1,6 @@
 import { db } from "../api/firebase";
-import { collection, getDocs, addDoc, doc, query,orderBy, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, orderBy, where } from "firebase/firestore";
+
 // referencia a la collection
 const usuariosRef = collection(db, "usuarios");
 
@@ -17,7 +18,7 @@ export async function obtenerUsuarios() {
 }
 
 // Agregar un nuevo usuario
-export async function agregarUsuarios({ nombre, genero, email, clave, confirmarClave }) {
+export async function agregarUsuario({ nombre, genero, email, clave, confirmarClave }) {
   try {
     const nuevoUsuario = {
       nombre: nombre.trim(),
