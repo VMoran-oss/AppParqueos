@@ -1,7 +1,7 @@
 import { db } from "../api/firebase";
 import { collection, getDocs, addDoc, doc, query,orderBy, where } from "firebase/firestore";
 // referencia a la collection
-const noticiasRef = collection(db, "usuarios");
+const usuariosRef = collection(db, "usuarios");
 
 // Obtener todos los usuarios ordenados por nombre
 export async function obtenerUsuarios() {
@@ -17,7 +17,7 @@ export async function obtenerUsuarios() {
 }
 
 // Agregar un nuevo usuario
-export async function agregarUsuario({ nombre, genero, correoElectronico, contraseña, confirmarContraseña }) {
+export async function agregarUsuarios({ nombre, genero, correoElectronico, contraseña, confirmarContraseña }) {
   try {
     const nuevoUsuario = {
       nombre: nombre.trim(),

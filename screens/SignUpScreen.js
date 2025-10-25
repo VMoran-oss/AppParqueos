@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Layout, Input, ButtonRounded } from '../components';
-import { FlatList, Text, Image, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
-import { obtenerNoticias, formatDate } from '../services/newService';
+import { FlatList, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { obtenerUsuarios } from '../services/userService';
 
 
 export default function RegisterScreen({ navigation }) {
@@ -11,6 +11,36 @@ export default function RegisterScreen({ navigation }) {
     const [email, setEmail] = useState('');
     const [clave, setClave] = useState('');
     const [confirmarClave, setConfirmarClave] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [datos, setDatos] = useState([]);
+
+    async function buscar() {
+    try {
+        const lista = await obtenerUsuarios();
+        setDatos(lista); // cargar usuarios
+    } catch (error) {
+        console.error(error);
+    } finally {
+        setLoading(false);
+    }
+}
+    useEffect(() => {
+        buscar();
+    }, []);
+
+    function renderItem({ item, navigation }) {
+    return (
+        <TouchableOpacity 
+            style={styles.card} 
+            onPress={() => navigation.navigate('ViewNew', { usuario: item })}
+        >
+            <Text style={styles.title}>{item.nombre}</Text>
+            <Text style={styles.subTitle}>CorreoElectronico: {item.correoElectronico}</Text>
+            <Text style={styles.subTitle}>Genero: {item.genero}</Text>
+        </TouchableOpacity>
+    );
+}
+if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
 
     function Confirmar() {
         //logica
@@ -20,9 +50,9 @@ export default function RegisterScreen({ navigation }) {
     return (
         <Layout title="Registro">
             <FlatList
-                data={datos}
-                renderItem={renderItem}
-                keyExtractor={(x) => x.id}
+                data={datos}                
+                renderItem={({ item }) => renderItem({ item, navigation })}
+                keyExtractor={(item) => item.id}
             />
             <View style={styles.form}>
                 <Input
