@@ -1,15 +1,34 @@
 import { useState, useEffect } from 'react';
 import { Layout, Input, ButtonRounded } from '../components';
 import MallSelection from './MallSelectionScreen';
+import {Alert} from 'react-native';
+import { verificarUsuario } from '../services/userService';
 
 export default function LoginScreen({ navigation }){
     const [email, setEmail] = useState('');
     const [clave, setClave] = useState('');
 
-    function iniciarSesion(){
-    // logica 
-    navigation.navigate('SignUp'); // ir a screen registrarse
-    navigation.navigate('MallSelection'); // ir a screen registrarse
+    async function iniciarSesion(){
+           // Validar campos vacíos
+    if (!email || !clave) {
+      Alert.alert('Error', 'Por favor, completa todos los campos.');
+      return;
+    }
+
+    try {
+      // Verificar usuario en el servicio
+      const usuarioValido = await verificarUsuario(email, clave);
+
+      if (usuarioValido) {
+        Alert.alert('Bienvenido', 'Inicio de sesión exitoso.');
+        navigation.navigate('MallSelection'); // Redirigir a la pantalla principal
+      } else {
+        Alert.alert('Error', 'Correo o contraseña incorrectos.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Ocurrió un problema al iniciar sesión.');
+      console.error(error);
+    }
 }
 
     return (
@@ -17,7 +36,7 @@ export default function LoginScreen({ navigation }){
             <Input 
                 label="Correo electronico"
                 placeholder="codigo@esfe.agape.edu.sv"
-                type="email-address"
+                type="email"
                 value={email}
                 onChangeText={setEmail} />
             <Input 
@@ -26,7 +45,7 @@ export default function LoginScreen({ navigation }){
                 hideText={true}
                 value={clave}
                 onChangeText={setClave} />
-            <ButtonRounded title="Iniciar Sesion" onPress={() => navigation.navigate('MallSelection' ) }/>
+            <ButtonRounded title="Iniciar Sesion" onPress={() => navigation.navigate('iniciarSesion' ) }/>
             <ButtonRounded title="Registrarse" isPrimary={false}    
              onPress={() => navigation.navigate('SignUp')}/>
         </Layout>

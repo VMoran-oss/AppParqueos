@@ -17,14 +17,14 @@ export async function obtenerUsuarios() {
 }
 
 // Agregar un nuevo usuario
-export async function agregarUsuarios({ nombre, genero, correoElectronico, contraseña, confirmarContraseña }) {
+export async function agregarUsuarios({ nombre, genero, email, clave, confirmarClave }) {
   try {
     const nuevoUsuario = {
       nombre: nombre.trim(),
       genero: genero.trim(),
-      correoElectronico: correoElectronico.trim(),
-      contraseña: contraseña.trim(),
-      confirmarContraseña: confirmarContraseña.trim(),
+      email: email.trim(),
+      clave: clave.trim(),
+      confirmarClave: confirmarClave.trim(),
     };
     const docRef = await addDoc(usuariosRef, nuevoUsuario);
     console.log("Usuario agregado con ID:", docRef.id);
@@ -35,3 +35,29 @@ export async function agregarUsuarios({ nombre, genero, correoElectronico, contr
   }
 }
 
+// Verificar usuario en (inicio de sesión)
+export async function verificarUsuario(email, clave) {
+  try {
+    // Buscar el usuario por su correo y clave
+    const q = query(
+      usuariosRef,
+      where("email", "==", email.trim()),
+      where("clave", "==", clave.trim())
+    );
+
+    const snap = await getDocs(q);
+
+    if (!snap.empty) {
+      // Usuario encontrado
+      const userData = snap.docs[0].data();
+      console.log("Usuario encontrado:", userData);
+      return userData;
+    } else {
+      // No existe
+      return null;
+    }
+  } catch (err) {
+    console.error("Error en verificarUsuario:", err);
+    throw err;
+  }
+}

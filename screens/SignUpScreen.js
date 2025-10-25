@@ -1,60 +1,37 @@
 import { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Layout, Input, ButtonRounded } from '../components';
-import { FlatList, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { obtenerUsuarios } from '../services/userService';
-
+import { Alert } from 'react-native';
+import { agregarUsuarios } from '../services/userService';
 
 export default function RegisterScreen({ navigation }) {
     const [nombre, setNombre] = useState('');
     const [genero, setGenero] = useState('');
     const [email, setEmail] = useState('');
     const [clave, setClave] = useState('');
-    const [confirmarClave, setConfirmarClave] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [datos, setDatos] = useState([]);
+    const [confirmarClave, setConfirmarClave] = useState('')
 
-    async function buscar() {
-    try {
-        const lista = await obtenerUsuarios();
-        setDatos(lista); // cargar usuarios
-    } catch (error) {
-        console.error(error);
-    } finally {
-        setLoading(false);
-    }
-}
-    useEffect(() => {
-        buscar();
-    }, []);
+    async function guardar(){
+        //validar
+        if (!nombre || !genero || !email || !clave || !confirmarClave) {
+          Alert.alert( "Error", "Por favor, completa todos los campos obligatorios." );
+          return;
+        }
 
-    function renderItem({ item, navigation }) {
-    return (
-        <TouchableOpacity 
-            style={styles.card} 
-            onPress={() => navigation.navigate('ViewNew', { usuario: item })}
-        >
-            <Text style={styles.title}>{item.nombre}</Text>
-            <Text style={styles.subTitle}>CorreoElectronico: {item.correoElectronico}</Text>
-            <Text style={styles.subTitle}>Genero: {item.genero}</Text>
-        </TouchableOpacity>
-    );
-}
-if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
+        // guardar usuario
+        await agregarUsuarios({
+            nombre: nombre,
+            genero: genero,
+            email: email,
+            clave: clave,
+            confirmarClave: confirmarClave,
+        });
 
-    function Confirmar() {
-        //logica
-        navigation.navigate('Home', { screen: 'Login' });
+        navigation.popToTop(); //cerrar screen
     }
 
     return (
         <Layout title="Registro">
-            <FlatList
-                data={datos}                
-                renderItem={({ item }) => renderItem({ item, navigation })}
-                keyExtractor={(item) => item.id}
-            />
-            <View style={styles.form}>
                 <Input
                     label="Nombre"
                     placeholder="Juan Perez"
@@ -90,11 +67,10 @@ if (loading) return <ActivityIndicator style={{ flex: 1 }} />;
                     value={confirmarClave}
                     onChangeText={setConfirmarClave}
                 />
-
-                <View style={styles.buttonContainer}>
-                    <ButtonRounded title="Confirmar" onPress={Confirmar} />
+                <ButtonRounded title="Guardar" onPress={guardar} />    
+            <ButtonRounded title="Cancelar" isPrimary={false} onPress={()=> navigation.popToTop()} />
+               <View style={styles.buttonContainer}>
                 </View>
-            </View>
         </Layout>
     );
 }
