@@ -2,6 +2,7 @@ import React from "react";
 import MallSelectionScreen from "./screens/MallSelectionScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 
+ 
 // importar tabs
 import AppTabs from "./navigation/AppTabs";
 
@@ -16,7 +17,7 @@ import ParkingMapScreen from "./screens/ParkingMapScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import DirectoryScreen from "./screens/DirectoryScreen";
-
+import RegisterMallScreen from "./screens/RegisterMallScreen";
 // crear Stack
 const Stack = createStackNavigator();
 
@@ -37,6 +38,11 @@ export default function App() {
           name="MallSelection"
           component={MallSelectionScreen}
           options={{ title: "Seleccionar Centro Comercial" }}
+        />
+        <Stack.Screen
+          name="RegisterMall"
+          component={RegisterMallScreen}
+          options={{ title: "Agregar Centro Comercial" }}
         />
 
         <Stack.Screen

@@ -2,6 +2,7 @@ import React from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import CentroCard from "../components/CentroCard";
 import { centros } from "../services/centrosData";
+import { ButtonRounded } from "../components"; // importacion nueva y de prueba aun
 
 export default function MallSelection({ navigation }) {
   const handlePress = (centro) => {
@@ -25,6 +26,15 @@ export default function MallSelection({ navigation }) {
         )}
         showsVerticalScrollIndicator={false}
       />
+
+      {/* Botón para ir a RegisterMallScreen */}
+      
+      <View style={{ padding: 20 }}>
+        <ButtonRounded
+          title="Agregar Nuevo Centro"
+          onPress={() => navigation.navigate("RegisterMall")}
+        />
+      </View>
     </View>
   );
 }
