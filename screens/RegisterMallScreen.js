@@ -6,26 +6,26 @@ import { Layout, ButtonRounded } from "../components";
 
 export default function RegisterMallScreen({navigation}) {
  const[nombre, setNombre] = useState("");
- const[imagen, setImagen] = useState("");
+ const[imagenUrl, setImagenUrl] = useState("");
  const[descripcion, setDescripcion] = useState("");
 
  const guardarCentro = async() => {
-    if( !nombre || !imagen || !descripcion){
+    if( !nombre || !imagenUrl || !descripcion){
         Alert.alert("Error","Por favor complete todos los campos");
         return;
 
     }
 
     try{
-     await addDoc(collection(db, "Centros Comerciales"),{
+     await addDoc(collection(db, "centrosComerciales"),{
       nombre,
-      imagen,
+      imagenUrl,
       descripcion   
      });
      
      Alert.alert("Exito", "Centro comercial guardado");
      setNombre("");
-     setImagen("");
+     setImagenUrl("");
      setDescripcion("");
 
     navigation.navigate("MallSelection");
@@ -52,8 +52,8 @@ return (
         <TextInput
           style={styles.input}
           placeholder="Ej: https://..."
-          value={imagen}
-          onChangeText={setImagen}
+          value={imagenUrl}
+          onChangeText={setImagenUrl}
         />
 
         <Text style={styles.label}>Descripción</Text>

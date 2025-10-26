@@ -1,14 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import CentroCard from "../components/CentroCard";
-import { centros } from "../services/centrosData";
 import { ButtonRounded } from "../components"; // importacion nueva y de prueba aun
+import { collection, getDocs } from "firebase/firestore"; 
+import { db } from "../api/firebase";
 
 export default function MallSelection({ navigation }) {
+  const [centros, setCentros] = useState([]);
+
+  useEffect(() => {
+    const fetchCentros = async () => {
+      try {
+        const querySnapshot = await getDocs(
+          collection(db, "centrosComerciales")
+        );
+        const lista = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setCentros(lista); //  actualiza la lista de centros
+      } catch (error) {
+        console.log("Error al traer centros:", error);
+      }
+    };
+
+    fetchCentros();
+  }, []);
+
   const handlePress = (centro) => {
     console.log("Centro seleccionado:", centro.nombre);
-    navigation.navigate("Directory", { id: centro.id });
-    // navigation.navigate("Parking Map", { id: centro.id });
+    navigation.navigate("Directory", { id: centro.id }); 
   };
 
   return (
@@ -18,7 +39,7 @@ export default function MallSelection({ navigation }) {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <CentroCard
-            imagen={item.imagen}
+            imagen={item.imagenUrl}
             nombre={item.nombre}
             descripcion={item.descripcion}
             onPress={() => handlePress(item)}
@@ -28,7 +49,7 @@ export default function MallSelection({ navigation }) {
       />
 
       {/* Botón para ir a RegisterMallScreen */}
-      
+
       <View style={{ padding: 20 }}>
         <ButtonRounded
           title="Agregar Nuevo Centro"

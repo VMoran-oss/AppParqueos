@@ -5,7 +5,7 @@ import { TouchableOpacity, Image, Text, StyleSheet, View } from "react-native";
 export default function CentroCard({ imagen, nombre, descripcion, onPress }) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.9}>
-      <Image source={imagen} style={styles.image} resizeMode="cover" />
+      <Image source={{uri:imagen}} style={styles.image} resizeMode="cover" />
       <View style={styles.info}>
         <Text style={styles.nombre}>{nombre}</Text>
         <Text style={styles.descripcion}>{descripcion}</Text>
