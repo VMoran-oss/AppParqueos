@@ -45,7 +45,7 @@ export default function LoginScreen({ navigation }){
                 hideText={true}
                 value={clave}
                 onChangeText={setClave} />
-            <ButtonRounded title="Iniciar Sesion" onPress={() => navigation.navigate('iniciarSesion' ) }/>
+            <ButtonRounded title="Iniciar Sesion" onPress={iniciarSesion }/>
             <ButtonRounded title="Registrarse" isPrimary={false}    
              onPress={() => navigation.navigate('SignUp')}/>
         </Layout>
