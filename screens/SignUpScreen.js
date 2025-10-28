@@ -3,7 +3,8 @@ import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import { Layout, Input, ButtonRounded } from '../components';
 import { Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
-import { agregarUsuarios } from '../services/userService';
+import { agregarUsuario } from '../services/userService';
+
 
 export default function RegisterScreen({ navigation }) {
     const [nombre, setNombre] = useState('');
@@ -12,13 +13,14 @@ export default function RegisterScreen({ navigation }) {
     const [clave, setClave] = useState('');
     const [confirmarClave, setConfirmarClave] = useState('');
 
-    async function guardar() {
+    const guardar = async () => {
         if (!nombre || !genero || !email || !clave || !confirmarClave) {
             Alert.alert("Error", "Por favor, completa todos los campos obligatorios.");
             return;
         }
 
-        await agregarUsuarios({ nombre, genero, email, clave, confirmarClave });
+
+        await agregarUsuario({ nombre, genero, email, clave, confirmarClave });
         navigation.popToTop();
     }
 
@@ -135,14 +137,10 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         backgroundColor: '#fff',
         justifyContent: 'center',
-        paddingHorizontal: 10,
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-        shadowOffset: { width: 0, height: 2 },
+
     },
     picker: {
-        height: 48,
+        height: 50,
         width: '100%',
         fontSize: 16,
         color: '#000',

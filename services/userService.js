@@ -25,7 +25,7 @@ export async function agregarUsuario({ nombre, genero, email, clave, confirmarCl
       genero: genero.trim(),
       email: email.trim(),
       clave: clave.trim(),
-      confirmarClave: confirmarClave.trim(),
+      // confirmarClave: confirmarClave.trim(),
     };
     const docRef = await addDoc(usuariosRef, nuevoUsuario);
     console.log("Usuario agregado con ID:", docRef.id);
