@@ -29,7 +29,7 @@ export default function MallSelection({ navigation }) {
 
   const handlePress = (centro) => {
     console.log("Centro seleccionado:", centro.nombre);
-    navigation.navigate("Directory", { id: centro.id }); 
+    navigation.navigate("Directory", { nombreCentro: centro.nombre });
   };
 
   return (
