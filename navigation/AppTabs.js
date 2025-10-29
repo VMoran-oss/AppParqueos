@@ -38,7 +38,7 @@ export default function AppTabs() {
         >
             <Tab.Screen name="Login" component={LoginScreen} options={{ title: "Iniciar sesión" }} />
             {/*<Tab.Screen name="Sign Up" component={SignUpScreen} options={{ title: "Registrarse" }} />*/}
-            {/*<Tab.Screen name="Mall Selection" component={MallSelectionScreen} options={{ title: "Seleccionar Centro Comercial " }} />*/}
+            <Tab.Screen name="Mall Selection" component={MallSelectionScreen} options={{ title: "Seleccionar Centro Comercial " }} />
             {/*<Tab.Screen name="Directory" component={DirectoryScreen} options={{ title: "Directorio" }} />*/}
             <Tab.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Mapa de parqueo" }} />
         </Tab.Navigator>
