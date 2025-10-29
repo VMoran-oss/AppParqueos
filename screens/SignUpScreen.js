@@ -21,6 +21,10 @@ export default function RegisterScreen({ navigation }) {
 
 
         await agregarUsuario({ nombre, genero, email, clave, confirmarClave });
+        Alert.alert(
+            'Exito',
+            'Registro se guardo con éxito.'
+        );
         navigation.popToTop();
     }
 
