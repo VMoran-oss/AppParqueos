@@ -10,25 +10,24 @@ export default function DirectoryScreen() {
   const [estado, setEstado] = useState('');
   const [imagenUrl, setImagenUrl] = useState('');
 
-  // --- Precarga de ejemplo ---
   const negociosPreCargados = [
     {
-      nombre: 'Pollería El Sabor',
+      nombre: 'Burger King',
       horario: '10:00 - 22:00',
       estado: 'Abierto',
-      imagenUrl: 'https://i.imgur.com/1qQmQ6L.jpg'
+      imagenUrl: 'https://plazanorte.pe/wp-content/uploads/2024/03/burger-king-3-1.jpg'
     },
     {
-      nombre: 'Zapatería Trendy',
+      nombre: 'Don pollo',
       horario: '09:00 - 21:00',
       estado: 'Cerrado',
-      imagenUrl: 'https://i.imgur.com/4Z6qWQK.jpg'
+      imagenUrl: 'https://www.galerias.com.sv/wp-content/uploads/2021/07/1-41.jpg'
     },
     {
-      nombre: 'Cafetería Aroma',
+      nombre: 'Dollar City',
       horario: '07:00 - 20:00',
       estado: 'Abierto',
-      imagenUrl: 'https://i.imgur.com/T7N9fT2.jpg'
+      imagenUrl: 'https://dollarcity.com/wp-content/uploads/2023/09/dollarcity.jpg'
     }
   ];
 
