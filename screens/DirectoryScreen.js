@@ -1,94 +1,128 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, Button, FlatList, StyleSheet, ScrollView, Alert, Image } from 'react-native';
+import { db } from '../api/firebase';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 
-const negociosPorCentro = {
-  'Metrocentro': [
-    { id: '1', nombre: 'Moda Express', descripcion: '20% de descuento en tu primera compra', abierto: true },
-    { id: '2', nombre: 'El Sabor Latino', descripcion: 'Happy Hour de 5 a 7 PM', abierto: false },
-    { id: '3', nombre: 'Calzado Elegante', descripcion: 'Oferta especial: 2x1 en zapatos', abierto: true },
-    { id: '4', nombre: 'Accesorios Chic', descripcion: 'Descuento del 15% en accesorios', abierto: true },
-  ],
-  'Multiplaza': [
-    { id: '1', nombre: 'Café Aroma', descripcion: '2x1 en capuchinos', abierto: true },
-    { id: '2', nombre: 'TechZone', descripcion: 'Descuentos en gadgets', abierto: false },
-  ],
-  'Galerías Mall': [
-    { id: '1', nombre: 'SportWorld', descripcion: 'Hasta 30% en ropa deportiva', abierto: true },
-    { id: '2', nombre: 'CineStar', descripcion: 'Entradas 2x1 los miércoles', abierto: true },
-  ], 
-  'Plaza Central': [
-    { id: '1', nombre: 'Panadería Dulce Hogar', descripcion: 'Pan recién hecho todo el día', abierto: true },
-    { id: '2', nombre: 'Librería Ideas', descripcion: 'Nuevos lanzamientos con 10% off', abierto: false },
-  ],
-};
+export default function DirectoryScreen() {
+  const [negocios, setNegocios] = useState([]);
+  const [nombre, setNombre] = useState('');
+  const [horario, setHorario] = useState('');
+  const [estado, setEstado] = useState('');
+  const [imagenUrl, setImagenUrl] = useState('');
 
-export default function DirectoryScreen({ route }) {
-  const { centroSeleccionado } = route.params;
-  const negocios = negociosPorCentro[centroSeleccionado] || [];
+  // --- Precarga de ejemplo ---
+  const negociosPreCargados = [
+    {
+      nombre: 'Pollería El Sabor',
+      horario: '10:00 - 22:00',
+      estado: 'Abierto',
+      imagenUrl: 'https://i.imgur.com/1qQmQ6L.jpg'
+    },
+    {
+      nombre: 'Zapatería Trendy',
+      horario: '09:00 - 21:00',
+      estado: 'Cerrado',
+      imagenUrl: 'https://i.imgur.com/4Z6qWQK.jpg'
+    },
+    {
+      nombre: 'Cafetería Aroma',
+      horario: '07:00 - 20:00',
+      estado: 'Abierto',
+      imagenUrl: 'https://i.imgur.com/T7N9fT2.jpg'
+    }
+  ];
+
+  const precargarNegocios = async () => {
+    try {
+      const col = collection(db, 'negocios');
+      const snapshot = await getDocs(col);
+      if (snapshot.empty) {
+        for (const negocio of negociosPreCargados) {
+          await addDoc(col, negocio);
+        }
+      }
+      cargarNegocios();
+    } catch (error) {
+      console.error('Error precargando negocios:', error);
+    }
+  };
+
+  // --- Cargar todos los negocios ---
+  const cargarNegocios = async () => {
+    try {
+      const col = collection(db, 'negocios');
+      const snapshot = await getDocs(col);
+      const lista = [];
+      snapshot.forEach((doc) => lista.push({ id: doc.id, ...doc.data() }));
+      setNegocios(lista);
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'No se pudieron cargar los negocios');
+    }
+  };
+
+  useEffect(() => {
+    precargarNegocios();
+  }, []);
+
+  // --- Agregar negocio ---
+  const agregarNegocio = async () => {
+    if (!nombre || !horario || !estado || !imagenUrl) {
+      Alert.alert('Error', 'Debes completar todos los campos');
+      return;
+    }
+    try {
+      await addDoc(collection(db, 'negocios'), { nombre, horario, estado, imagenUrl });
+      setNombre('');
+      setHorario('');
+      setEstado('');
+      setImagenUrl('');
+      cargarNegocios();
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'No se pudo agregar el negocio');
+    }
+  };
+
+  // --- Render de negocio con placeholder ---
+  const renderItem = ({ item }) => (
+    <View style={styles.card}>
+      <Text style={styles.cardTitle}>{item.nombre}</Text>
+      <Text>Horario: {item.horario}</Text>
+      <Text>Estado: {item.estado}</Text>
+      <Image
+        source={{ uri: item.imagenUrl || 'https://via.placeholder.com/150' }}
+        style={styles.image}
+        resizeMode="contain"
+        onError={(e) => console.log('Imagen inválida, mostrando placeholder')}
+      />
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titulo}>{centroSeleccionado}</Text>
-      <Text style={styles.subtitulo}>Directorio de negocios</Text>
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Agregar Nuevo Negocio</Text>
+      <TextInput placeholder="Nombre del negocio" value={nombre} onChangeText={setNombre} style={styles.input} />
+      <TextInput placeholder="Horario" value={horario} onChangeText={setHorario} style={styles.input} />
+      <TextInput placeholder="Estado (Abierto / Cerrado)" value={estado} onChangeText={setEstado} style={styles.input} />
+      <TextInput placeholder="URL Imagen" value={imagenUrl} onChangeText={setImagenUrl} style={styles.input} />
+      <Button title="Agregar Negocio" onPress={agregarNegocio} />
 
+      <Text style={styles.title}>Lista de Negocios</Text>
       <FlatList
         data={negocios}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
-            <View style={styles.row}>
-              <Text style={styles.nombre}>{item.nombre}</Text>
-              <Text style={[styles.estado, { color: item.abierto ? 'green' : 'red' }]}>
-                {item.abierto ? 'Abierto' : 'Cerrado'}
-              </Text>
-            </View>
-            <Text style={styles.descripcion}>{item.descripcion}</Text>
-          </TouchableOpacity>
-        )}
+        renderItem={renderItem}
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F8F8F8',
-    padding: 20,
-  },
-  titulo: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    textAlign: 'center',
-  },
-  subtitulo: {
-    fontSize: 16,
-    color: '#555',
-    marginBottom: 15,
-    textAlign: 'center',
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 10,
-    elevation: 2,
-  },
-  nombre: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  descripcion: {
-    color: '#555',
-    marginTop: 5,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  estado: {
-    fontWeight: 'bold',
-  },
+  container: { padding: 20, backgroundColor: '#fff' },
+  title: { fontSize: 20, fontWeight: 'bold', marginVertical: 10 },
+  input: { borderWidth: 1, borderColor: '#ccc', marginBottom: 10, padding: 8, borderRadius: 5 },
+  card: { borderWidth: 1, borderColor: '#ccc', borderRadius: 5, padding: 10, marginVertical: 5, alignItems: 'center' },
+  cardTitle: { fontWeight: 'bold', fontSize: 16, marginBottom: 5 },
+  image: { width: 200, height: 200, marginTop: 5, backgroundColor: '#eee' } // fondo gris si no carga
 });
