@@ -13,19 +13,19 @@ export default function DirectoryScreen() {
   const negociosPreCargados = [
     {
       nombre: 'Burger King',
-      horario: '10:00 - 22:00',
+      horario: '7:00am - 10:00pm',
       estado: 'Abierto',
       imagenUrl: 'https://plazanorte.pe/wp-content/uploads/2024/03/burger-king-3-1.jpg'
     },
     {
       nombre: 'Don pollo',
-      horario: '09:00 - 21:00',
+      horario: '09:00am a - 9:00pm',
       estado: 'Cerrado',
       imagenUrl: 'https://www.galerias.com.sv/wp-content/uploads/2021/07/1-41.jpg'
     },
     {
-      nombre: 'Dollar City',
-      horario: '07:00 - 20:00',
+      nombre: 'Dollarcity',
+      horario: '07:00am a- 6:00pm',
       estado: 'Abierto',
       imagenUrl: 'https://dollarcity.com/wp-content/uploads/2023/09/dollarcity.jpg'
     }
