@@ -2,7 +2,7 @@ import React from "react";
 import MallSelectionScreen from "./screens/MallSelectionScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 
- 
+
 // importar tabs
 import AppTabs from "./navigation/AppTabs";
 
@@ -17,6 +17,7 @@ import ParkingMapScreen from "./screens/ParkingMapScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import DirectoryScreen from "./screens/DirectoryScreen";
+import RegisterDirectoryScreen from "./screens/RegisterDirectoryScreen";
 import RegisterMallScreen from "./screens/RegisterMallScreen";
 // crear Stack
 const Stack = createStackNavigator();
@@ -55,6 +56,12 @@ export default function App() {
           name="Directory"
           component={DirectoryScreen}
           options={{ title: "Directorio" }}
+           />
+
+          <Stack.Screen
+          name="RegisterDirectory"
+          component={RegisterDirectoryScreen}
+          options={{ title: 'Agregar Negocio' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
