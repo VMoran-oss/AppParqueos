@@ -2,15 +2,10 @@ import { useState, useEffect } from 'react';
 import { Layout, Input, ButtonRounded } from '../components';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { db } from '../api/firebase'; 
-{/*import { doc, onSnapshot } from 'firebase/firestore';*/}
-// **CAMBIO 1:** Importar 'collection' y 'query' (si fuera necesario filtrar), pero 'onSnapshot' con 'collection' es clave.
 import { collection, onSnapshot } from 'firebase/firestore'; 
 
-//simulación de censores (true = disponible, false = ocupado)
-
-// El mapeo de la grilla (Esto es lo más importante)
+// El mapeo de la grilla 
 const GRID_MAP = [
-    // ... (Tu GRID_MAP se mantiene igual, es correcto para mapear)
     ['A1-1', 'A1-2', 'A1-3', 'A1-4', 'A1-5', 'A1-6'],
     ['A2-1', 'A2-2', 'A2-3', 'A2-4', 'A2-5', 'A2-6'],
     ['A3-1', 'A3-2', 'A3-3', 'A3-4', 'A3-5', 'A3-6'],
@@ -31,10 +26,10 @@ export default function ParkingMap() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // **CAMBIO 2:** Crea la referencia a la colección 'parqueos' completa.
+        // Referencia a la colección 'parqueos' completa.
         const collectionRef = collection(db, 'parqueos');
         
-        // **CAMBIO 3:** Usa onSnapshot para escuchar cambios en la colección.
+        //Para escuchar cambios en la colección.
         const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
             const newParkingStates = {};
 
@@ -43,8 +38,6 @@ export default function ParkingMap() {
                 const data = doc.data();
                 const espacioId = doc.id; // El ID del documento es el nombre del espacio (ej: 'A1-1')
 
-                // Tu documento tiene un campo 'estado' (ej: "Disponible").
-                // Queremos un booleano: true (disponible/verde) o false (ocupado/rojo).
                 // Compara el campo 'estado' con el valor de "Disponible"
                 const isDisponible = data.estado === ESTADO_DISPONIBLE;
                 
@@ -61,13 +54,13 @@ export default function ParkingMap() {
              setLoading(false);
         });
 
-        // 4. Importante: Retorna la función de limpieza (unsubscribe)
+        //Retorna la función de limpieza (unsubscribe)
         return () => unsubscribe();
     }, []); 
 
     // --- Lógica de Renderizado ---
     if (loading) {
-        // ... (el código de carga se mantiene igual)
+    
     }
     
     return (
@@ -75,7 +68,7 @@ export default function ParkingMap() {
             <ScrollView contentContainerStyle={styles.container}>
                 <Text style={styles.title}>Estacionamiento Disponible</Text>
                 <Text style={styles.entradaSalida}>Entrada / Salida</Text>
-                {/* ... (Título y secciones se mantienen igual) ... */}
+                {/*Título y secciones*/}
                 <View style={styles.grid}>
                     {GRID_MAP.map((fila, filaIndex) => {
                         // ... (Lógica de títulos de sección) ...
@@ -85,8 +78,8 @@ export default function ParkingMap() {
                                 {filaIndex === A_ROWS && <Text style={styles.section}>Sección B</Text>}
                                 <View style={styles.row}>
                                     {fila.map((espacioId, espacioIndex) => {
-                                        // **SIN CAMBIOS AQUÍ:** La lógica de renderizado ahora funciona
-                                        // porque 'parkingStates' tiene la estructura que espera: { 'A1-1': true/false }
+                                        // Lógica de renderizado
+                                        //'parkingStates' tiene la estructura que espera: { 'A1-1': true/false }
                                         const isDisponible = parkingStates[espacioId] === true;
                                         
                                         return (
@@ -107,12 +100,10 @@ export default function ParkingMap() {
                         );
                     })}
                 </View>
-                {/* ... (Leyenda y Styles se mantienen igual) ... */}
             </ScrollView>
         </Layout>
     );
 }
-// ... (El objeto 'styles' se mantiene igual) ...
 const styles = StyleSheet.create({
     container: {
         padding: 20,
