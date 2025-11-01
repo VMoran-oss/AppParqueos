@@ -31,8 +31,13 @@ export default function AppTabs() {
 
                     if (route.name === 'Login') {
                         iconName = focused ? 'key' : 'key-outline';
-                    } else if (route.name === 'Parking Map') {
+                    } else if (route.name === 'ParkingMap') {
                         iconName = focused ? 'map' : 'map-outline';
+                    }
+                    if (route.name === 'MallSelection'){
+                        iconName = focused ? 'storefront' : 'store-outline';
+                    } else if (route.name === 'Profile') {
+                        iconName = focused ? 'person' : 'person-circle';
                     }
 
                     return <Ionicons name={iconName} size={size} color={color} />;

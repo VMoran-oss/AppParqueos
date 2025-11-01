@@ -28,7 +28,9 @@ export const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (authUser) => {
       // Si authUser existe, ponlo en el estado 'user', si no, 'user' será null
       setUser(authUser);
+      if (authUser){
       cargarRol(authUser.uid);
+      }
       setLoading(false);
     });
 
