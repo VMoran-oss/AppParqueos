@@ -1,12 +1,14 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useAuth } from '../context/AuthContext';
 
 // importar screens de los tabs
 import LoginScreen from '../screens/LoginScreen';
-{/*import SignUpScreen from '../screens/SignUpScreen';*/}
+{/*import SignUpScreen from '../screens/SignUpScreen';*/ }
 import MallSelectionScreen from '../screens/MallSelectionScreen';
-{/*import DirectoryScreen from '../screens/DirectoryScreen';*/}
+import DirectoryScreen from '../screens/DirectoryScreen';
 import ParkingMapScreen from '../screens/ParkingMapScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 
 // crear tabs
@@ -14,6 +16,7 @@ const Tab = createBottomTabNavigator();
 
 // exportar tabs
 export default function AppTabs() {
+    const { user } = useAuth();
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -36,11 +39,18 @@ export default function AppTabs() {
                 },
             })}
         >
-            <Tab.Screen name="Login" component={LoginScreen} options={{ title: "Iniciar sesión" }} />
+            {/*<Tab.Screen name="Login" component={LoginScreen} options={{ title: "Iniciar sesión" }} />*/}
             {/*<Tab.Screen name="Sign Up" component={SignUpScreen} options={{ title: "Registrarse" }} />*/}
-           {/* <Tab.Screen name="Mall Selection" component={MallSelectionScreen} options={{ title: "Seleccionar Centro Comercial " }} />*/}
-            {/*<Tab.Screen name="Directory" component={DirectoryScreen} options={{ title: "Directorio" }} />*/}
-            <Tab.Screen name="Parking Map" component={ParkingMapScreen} options={{ title: "Mapa de parqueo" }} />
+            {/* <Tab.Screen name="Mall Selection" component={MallSelectionScreen} options={{ title: "Seleccionar Centro Comercial " }} />*/}
+            {user ? (
+                <Tab.Screen name="MallSelection" component={MallSelectionScreen} options={{ title: "Seleccion Centro Comercial" }} />
+            ) : <Tab.Screen name="Login" component={LoginScreen} options={{ title: "Iniciar sesión" }} />}
+
+            {/* <Tab.Screen name="MallSelection" component={MallSelectionScreen} options={{ title: "Seleccion Centro Comercial" }} /> */}
+            <Tab.Screen name="ParkingMap" component={ParkingMapScreen} options={{ title: "Mapa de parqueo" }} />
+            {/* <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} /> */}
+            {user? <Tab.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />:null}
+
         </Tab.Navigator>
     );
 }

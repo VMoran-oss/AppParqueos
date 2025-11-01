@@ -4,30 +4,43 @@ import { Layout, Input, ButtonRounded } from '../components';
 import { Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { agregarUsuario } from '../services/userService';
+import { useAuth } from '../context/AuthContext';
 
-
-export default function RegisterScreen({ navigation }) {
+export default function SignUpScreen({ navigation }) {
     const [nombre, setNombre] = useState('');
     const [genero, setGenero] = useState('');
     const [email, setEmail] = useState('');
     const [clave, setClave] = useState('');
     const [confirmarClave, setConfirmarClave] = useState('');
+    const { register} = useAuth();
 
-    const guardar = async () => {
+    async function registrar() {
+        //validar
         if (!nombre || !genero || !email || !clave || !confirmarClave) {
-            Alert.alert("Error", "Por favor, completa todos los campos obligatorios.");
-            return;
+          Alert.alert( "Error", "Por favor, completa todos los campos obligatorios."); 
+          return;
+        }
+        // Confirmar claves
+        if (clave != confirmarClave) {
+          Alert.alert( "Error", "Las contraseñas no coinciden" ); 
+          return;
         }
 
+        try {
+          const data = {  nombre: nombre, genero: genero, };
+          await register(email, clave, data);
 
-        await agregarUsuario({ nombre, genero, email, clave, confirmarClave });
-        Alert.alert(
-            'Exito',
-            'Registro se guardo con éxito.'
-        );
-        navigation.popToTop();
+        } catch (error) {
+            console.error(error);
+            if (error.code === "auth/email-already-in-use") {
+                Alert.alert("Este correo electrónico ya está en uso.");
+            } else if (error.code === "auth/weak-password") {
+                Alert.alert("La contraseña debe tener al menos 6 caracteres.");
+            } else {
+                Alert.alert("Error al registrar la cuenta.");
+            }
+        }
     }
-
     return (
         <Layout title="Registro">
             <ScrollView
@@ -88,7 +101,7 @@ export default function RegisterScreen({ navigation }) {
                     />
 
                     <View style={styles.buttonGroup}>
-                        <ButtonRounded title="Guardar" onPress={guardar} />
+                        <ButtonRounded title="Guardar" onPress={registrar} />
                         <ButtonRounded
                             title="Cancelar"
                             isPrimary={false}

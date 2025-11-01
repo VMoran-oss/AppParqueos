@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, StyleSheet, Text } from "react-native";
 import CentroCard from "../components/CentroCard";
 import { ButtonRounded } from "../components"; // importacion nueva y de prueba aun
 import { collection, getDocs } from "firebase/firestore"; 
 import { db } from "../api/firebase";
+import { useAuth } from "../context/AuthContext";
 
 export default function MallSelection({ navigation }) {
   const [centros, setCentros] = useState([]);
+  const {rol, user} = useAuth();
 
   useEffect(() => {
     const fetchCentros = async () => {
@@ -34,6 +36,7 @@ export default function MallSelection({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Text>{rol}</Text>
       <FlatList
         data={centros}
         keyExtractor={(item) => item.id.toString()}
@@ -50,12 +53,14 @@ export default function MallSelection({ navigation }) {
 
       {/* Botón para ir a RegisterMallScreen */}
 
+  {rol=="admin"? 
       <View style={{ padding: 20 }}>
         <ButtonRounded
           title="Agregar Nuevo Centro"
           onPress={() => navigation.navigate("RegisterMall")}
         />
       </View>
+  :null}
     </View>
   );
 }

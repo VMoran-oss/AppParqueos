@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Layout, Input, ButtonRounded } from '../components';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import { db } from '../api/firebase'; 
-import { collection, onSnapshot } from 'firebase/firestore'; 
+import { db } from '../api/firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 
 // El mapeo de la grilla 
 const GRID_MAP = [
@@ -22,13 +22,13 @@ const ESTADO_DISPONIBLE = "Disponible";
 
 export default function ParkingMap() {
     // Aquí guardaremos el estado de todos los espacios: { 'A1-1': true, 'A1-2': false, ... }
-    const [parkingStates, setParkingStates] = useState({}); 
+    const [parkingStates, setParkingStates] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Referencia a la colección 'parqueos' completa.
         const collectionRef = collection(db, 'parqueos');
-        
+
         //Para escuchar cambios en la colección.
         const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
             const newParkingStates = {};
@@ -40,29 +40,29 @@ export default function ParkingMap() {
 
                 // Compara el campo 'estado' con el valor de "Disponible"
                 const isDisponible = data.estado === ESTADO_DISPONIBLE;
-                
+
                 // Almacena el estado en el objeto usando el ID del documento.
                 newParkingStates[espacioId] = isDisponible;
             });
-            
+
             // Actualiza el estado con todos los datos.
             setParkingStates(newParkingStates);
             setLoading(false);
-            
+
         }, (error) => {
-             console.error("Error al escuchar cambios en Firestore:", error);
-             setLoading(false);
+            console.error("Error al escuchar cambios en Firestore:", error);
+            setLoading(false);
         });
 
         //Retorna la función de limpieza (unsubscribe)
         return () => unsubscribe();
-    }, []); 
+    }, []);
 
     // --- Lógica de Renderizado ---
     if (loading) {
-    
+
     }
-    
+
     return (
         <Layout>
             <ScrollView contentContainerStyle={styles.container}>
@@ -81,7 +81,7 @@ export default function ParkingMap() {
                                         // Lógica de renderizado
                                         //'parkingStates' tiene la estructura que espera: { 'A1-1': true/false }
                                         const isDisponible = parkingStates[espacioId] === true;
-                                        
+
                                         return (
                                             <View
                                                 key={espacioIndex}
@@ -89,7 +89,7 @@ export default function ParkingMap() {
                                                     styles.slot,
                                                     {
                                                         // Si isDisponible es true (verde), si es false (rojo)
-                                                        backgroundColor: isDisponible ? '#4CAF50' : '#F44336', 
+                                                        backgroundColor: isDisponible ? '#4CAF50' : '#F44336',
                                                     },
                                                 ]}
                                             />
@@ -99,6 +99,16 @@ export default function ParkingMap() {
                             </View>
                         );
                     })}
+                </View>
+                <View style={styles.legendContainer}>
+                    <View style={styles.legendItem}>
+                        <View style={[styles.legendColor, { backgroundColor: '#4CAF50' }]} />
+                        <Text>Disponible</Text>
+                    </View>
+                    <View style={styles.legendItem}>
+                        <View style={[styles.legendColor, { backgroundColor: '#F44336' }]} />
+                        <Text>Ocupado</Text>
+                    </View>
                 </View>
             </ScrollView>
         </Layout>
