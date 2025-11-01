@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList, StyleSheet, Text } from "react-native";
+import { View, FlatList, StyleSheet, Alert  } from "react-native";
 import CentroCard from "../components/CentroCard";
 import { ButtonRounded } from "../components"; // importacion nueva y de prueba aun
 import { collection, getDocs } from "firebase/firestore"; 
@@ -32,6 +32,31 @@ export default function MallSelection({ navigation }) {
   const handlePress = (centro) => {
     console.log("Centro seleccionado:", centro.nombre);
     navigation.navigate("Directory", { nombreCentro: centro.nombre });
+
+    Alert.alert(
+      centro.nombre,
+      "¿A dónde deseas ir?",
+      [
+        {
+          text: "Ver Parqueo",
+
+          onPress: () =>
+            navigation.navigate("ParkingMap", { mallId: centro.id }),
+        },
+
+        {
+          text: "Ir al Directorio",
+          onPress: () =>
+            navigation.navigate("Directory", { nombreCentro: centro.nombre }),
+        },
+
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   return (
