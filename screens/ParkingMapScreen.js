@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Layout,} from '../components';
-import { StyleSheet, View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { Layout, } from '../components';
+import { StyleSheet, View, Text, ScrollView,} from 'react-native';
 import { db } from '../api/firebase';
-import { collection, onSnapshot, query,where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
 
 // El mapeo de la grilla 
@@ -21,9 +21,7 @@ const A_ROWS = 3;
 // Constantes para el estado, para evitar errores de tipeo
 const ESTADO_DISPONIBLE = "Disponible";
 
-// <-- 1. Definimos los centros comerciales para el Picker
-// Los 'keys' (ej: 'PlazaMundo') deben coincidir EXACTAMENTE
-// con el valor que guardas en el campo 'centroComercial' en Firestore.
+// Definimos los centros comerciales para filtro de busqueda con el valor que se guarda en el campo 'centroComercial' en Firestore.
 const CENTROS_COMERCIALES = {
     'PlazaMundo': 'Plaza Mundo',
     'ElEncuentro': 'El encuentro',
@@ -31,120 +29,111 @@ const CENTROS_COMERCIALES = {
     'LasCascadas': 'Las cascadas',
 };
 
+// Obtenemos la clave del primer centro para el estado inicial
+const VALOR_INICIAL_CENTRO = Object.keys(CENTROS_COMERCIALES)[0];
+
+
 export default function ParkingMap() {
-    // <-- 2. Estado para guardar el mall seleccionado
-    const [selectedMall, setSelectedMall] = useState('PlazaMundo'); // Valor inicial
-    
+    // Guardamos el estado de todos los espacios: { 'A1-1': true, 'A1-2': false, ... }
     const [parkingStates, setParkingStates] = useState({});
     const [loading, setLoading] = useState(true);
+    //filtro del centro comercial
+    const [centroSeleccionado, setCentroSeleccionado] = useState(VALOR_INICIAL_CENTRO);
 
     useEffect(() => {
-        setLoading(true);
-        setParkingStates({}); // Limpia los estados al cambiar de mall
-        
         // Referencia a la colección 'parqueos' completa.
         const collectionRef = collection(db, 'parqueos');
 
-        // <-- 3. Creamos la consulta (query) CON EL FILTRO
-        // Filtramos donde el campo "centroComercial" sea igual al mall seleccionado
-        const q = query(collectionRef, where("centroComercial", "==", selectedMall));
-
-        // <-- 4. Escuchamos la consulta (q), no la colección (collectionRef)
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        //Para escuchar cambios en la colección.
+        const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
             const newParkingStates = {};
 
-            // El resto de la lógica es la misma que tenías
+            const q = query(
+                collectionRef,
+                // Filtra los documentos donde el campo 'centroComercial' sea igual al 'centroSeleccionado'
+                where('centroComercial', '==', centroSeleccionado)
+            );
+            // Recorre cada documento (espacio de parqueo) en la colección.
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                const espacioId = doc.id; 
+                const espacioId = doc.id; // El ID del documento es el nombre del espacio (ej: 'A1-1')
+
+                // Compara el campo 'estado' con el valor de "Disponible"
                 const isDisponible = data.estado === ESTADO_DISPONIBLE;
+
+                // Almacena el estado en el objeto usando el ID del documento.
                 newParkingStates[espacioId] = isDisponible;
             });
 
+            // Actualiza el estado con todos los datos.
             setParkingStates(newParkingStates);
             setLoading(false);
 
         }, (error) => {
             console.error("Error al escuchar cambios en Firestore:", error);
-            // ¡Revisa la consola para ver el error del índice!
             setLoading(false);
         });
 
+        //Retorna la función de limpieza (unsubscribe)
         return () => unsubscribe();
-        
-    // <-- 5. El useEffect se ejecuta cada vez que 'selectedMall' cambia
-    }, [selectedMall]); 
-
+    }, []);
 
     // --- Lógica de Renderizado ---
-    
-    // Obtenemos el nombre "bonito" del mall para el título
-    const mallName = CENTROS_COMERCIALES[selectedMall];
+    if (loading) {
+
+    }
 
     return (
         <Layout>
             <ScrollView contentContainerStyle={styles.container}>
-                
-                {/* Menu de las opciones de busqueda*/}
-                <Text style={styles.pickerLabel}>Selecciona un Centro Comercial:</Text>
+                <Text style={styles.title}>Estacionamiento Disponible</Text>
+                {/* Añadimos el picker (SELECTOR) */}
                 <View style={styles.pickerContainer}>
+                    <Text style={styles.pickerLabel}>Selecciona Centro Comercial:</Text>
                     <Picker
-                        selectedValue={selectedMall}
+                        selectedValue={centroSeleccionado}
+                        onValueChange={(itemValue) => setCentroSeleccionado(itemValue)} // Cambia el estado
                         style={styles.picker}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setSelectedMall(itemValue)
-                        }>
-                        
-                        {/* Itera sobre las llaves de CENTROS_COMERCIALES */}
-                        {Object.keys(CENTROS_COMERCIALES).map((mallKey) => (
-                            <Picker.Item 
-                                key={mallKey} 
-                                label={CENTROS_COMERCIALES[mallKey]} 
-                                value={mallKey} 
-                            />
+                        itemStyle={styles.pickerItem}
+                    >
+                        {Object.entries(CENTROS_COMERCIALES).map(([key, value]) => (
+                            <Picker.Item key={key} label={value} value={key} />
                         ))}
                     </Picker>
                 </View>
-
-                {/* Un titulo dinamico utilizado para entrada y salida */}
-                <Text style={styles.title}>{mallName}</Text>
                 <Text style={styles.entradaSalida}>Entrada / Salida</Text>
-                
-                {/* Lógica de Carga*/}
-                {loading ? (
-                    <ActivityIndicator size="large" color="#0000ff" style={{ marginVertical: 40 }}/>
-                ) : (
-                    <View style={styles.grid}>
-                        {GRID_MAP.map((fila, filaIndex) => { 
-                            return (
-                                <View key={filaIndex} style={{ marginBottom: 10 }}>
-                                    {filaIndex === 0 && <Text style={styles.section}>Sección A</Text>}
-                                    {filaIndex === A_ROWS && <Text style={styles.section}>Sección B</Text>}
-                                    <View style={styles.row}>
-                                        {fila.map((espacioId, espacioIndex) => {
-                                            //Lógica de estado 
-                                            const isDisponible = parkingStates[espacioId] === true;
+                {/*Título y secciones*/}
+                <View style={styles.grid}>
+                    {GRID_MAP.map((fila, filaIndex) => {
+                        // ... (Lógica de títulos de sección) ...
+                        return (
+                            <View key={filaIndex} style={{ marginBottom: 10 }}>
+                                {filaIndex === 0 && <Text style={styles.section}>Sección A</Text>}
+                                {filaIndex === A_ROWS && <Text style={styles.section}>Sección B</Text>}
+                                <View style={styles.row}>
+                                    {fila.map((espacioId, espacioIndex) => {
+                                        // Lógica de renderizado
+                                        //'parkingStates' tiene la estructura que espera: { 'A1-1': true/false }
+                                        const isDisponible = parkingStates[espacioId] === true;
 
-                                            return (
-                                                <View
-                                                    key={espacioIndex}
-                                                    style={[
-                                                        styles.slot,
-                                                        {
-                                                            backgroundColor: isDisponible ? '#4CAF50' : '#F44336',
-                                                        },
-                                                    ]}
-                                                />
-                                            );
-                                        })}
-                                    </View>
+                                        return (
+                                            <View
+                                                key={espacioIndex}
+                                                style={[
+                                                    styles.slot,
+                                                    {
+                                                        // Si isDisponible es true (verde), si es false (rojo)
+                                                        backgroundColor: isDisponible ? '#4CAF50' : '#F44336',
+                                                    },
+                                                ]}
+                                            />
+                                        );
+                                    })}
                                 </View>
-                            );
-                        })}
-                    </View>
-                )}
-                
-                {/* Leyenda */}
+                            </View>
+                        );
+                    })}
+                </View>
                 <View style={styles.legendContainer}>
                     <View style={styles.legendItem}>
                         <View style={[styles.legendColor, { backgroundColor: '#4CAF50' }]} />
@@ -159,49 +148,45 @@ export default function ParkingMap() {
         </Layout>
     );
 }
-
 const styles = StyleSheet.create({
     container: {
-        padding: 20,
+        paddingTop: 20,    // Mantenemos el espacio arriba
+        paddingBottom: 20,
         alignItems: 'center',
         backgroundColor: '#F2F2F2',
     },
-    // Estilos para el Picker
-    pickerLabel: {
-        fontSize: 16,
-        fontWeight: '600',
-        alignSelf: 'flex-start',
-        marginLeft: 5,
-    },
-    pickerContainer: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        backgroundColor: '#FFFFFF',
-        marginTop: 5,
-        marginBottom: 20, 
-    },
-    picker: {
-        width: '100%',
-        height: 50, 
-    },
-    
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
     },
-    
-    entradaSalida: { 
-        fontSize: 14,
-        color: '#555',
-        marginBottom: 20,
-    },
+      // Estilos picker
+        pickerContainer: {
+            width: '100%',
+            marginBottom: 20,
+            backgroundColor: '#f9f6f6ff',
+            borderRadius: 8,
+            borderWidth: 1,
+            borderColor: '#fcf6f6ff',
+            paddingHorizontal: 10,
+        },
+        pickerLabel: {
+            fontSize: 18,
+            fontWeight: '600',
+            marginBottom: 5,
+            marginTop: 5,
+            color: '#555',
+        },
+        picker: {
+            height: 50,
+            width: '100%',
+        },
+        pickerItem: {
+            height: 50,
+        },
     section: {
         fontSize: 16,
-        marginBottom: 10, 
-        fontWeight: 'bold', 
+        marginBottom: 20,
     },
     grid: {
         flexDirection: 'column',
@@ -232,3 +217,4 @@ const styles = StyleSheet.create({
         borderRadius: 4,
     },
 });
+
