@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, ScrollView, Alert, Image, Button } from 'react-native';
 import { db } from '../api/firebase';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { useAuth } from "../context/AuthContext";
 
 export default function DirectoryScreen({ route, navigation }) {
   const { nombreCentro } = route.params;
   const [negocios, setNegocios] = useState([]);
+   const {rol, user} = useAuth();
 
   const cargarNegocios = async () => {
     try {
@@ -49,10 +51,11 @@ export default function DirectoryScreen({ route, navigation }) {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Estás en {nombreCentro}</Text>
 
-      <Button
+       {rol=="admin"?  <Button
         title="Agregar nuevo negocio"
         onPress={() => navigation.navigate('RegisterDirectory', { nombreCentro })}
-      />
+        />  
+        :null}
 
       <Text style={styles.subtitle}>Negocios en {nombreCentro}</Text>
       <FlatList

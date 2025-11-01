@@ -36,7 +36,7 @@ export default function MallSelection({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text>{rol}</Text>
+      {/* <Text>{rol}</Text> */}
       <FlatList
         data={centros}
         keyExtractor={(item) => item.id.toString()}
