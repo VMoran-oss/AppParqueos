@@ -6,7 +6,6 @@ import { useAuth } from '../context/AuthContext';
 import LoginScreen from '../screens/LoginScreen';
 {/*import SignUpScreen from '../screens/SignUpScreen';*/ }
 import MallSelectionScreen from '../screens/MallSelectionScreen';
-import DirectoryScreen from '../screens/DirectoryScreen';
 import ParkingMapScreen from '../screens/ParkingMapScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
@@ -48,7 +47,7 @@ export default function AppTabs() {
             {/*<Tab.Screen name="Sign Up" component={SignUpScreen} options={{ title: "Registrarse" }} />*/}
             {/* <Tab.Screen name="Mall Selection" component={MallSelectionScreen} options={{ title: "Seleccionar Centro Comercial " }} />*/}
             {user ? (
-                <Tab.Screen name="MallSelection" component={MallSelectionScreen} options={{ title: "Seleccion Centro Comercial" }} />
+                <Tab.Screen name="MallSelection" component={MallSelectionScreen} options={{ title: "Centros Comerciales" }} />
             ) : <Tab.Screen name="Login" component={LoginScreen} options={{ title: "Iniciar sesión" }} />}
 
             {/* <Tab.Screen name="MallSelection" component={MallSelectionScreen} options={{ title: "Seleccion Centro Comercial" }} /> */}
