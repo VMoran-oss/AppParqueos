@@ -31,7 +31,7 @@ export default function MallSelection({ navigation }) {
 
   const handlePress = (centro) => {
     console.log("Centro seleccionado:", centro.nombre);
-    navigation.navigate("Directory", { nombreCentro: centro.nombre });
+    // navigation.navigate("Directory", { nombreCentro: centro.nombre });
 
     Alert.alert(
       centro.nombre,
@@ -82,7 +82,7 @@ export default function MallSelection({ navigation }) {
       <View style={{ padding: 20 }}>
         <ButtonRounded
           title="Agregar Nuevo Centro"
-          onPress={() => navigation.navigate("RegisterMall")}
+          onPress={() => navigation.getParent()?.navigate("RegisterMall")}
         />
       </View>
   :null}
